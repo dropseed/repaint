@@ -3,6 +3,7 @@ import json
 import os
 
 import websockets
+from cached_property import cached_property
 
 from .server import Server
 
@@ -12,7 +13,8 @@ class Repaint:
         self.port = port
         self.server = Server(port=port)
 
-    def get_script_tag(self):
+    @cached_property
+    def script_tag(self):
         script_path = os.path.join(os.path.dirname(__file__), "js", "browser.js")
         with open(script_path, "r") as f:
             script_contents = f.read()
