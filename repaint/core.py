@@ -9,8 +9,8 @@ from .server import Server
 
 
 class Repaint:
-    def __init__(self, port=8765, quiet=False):
-        self.port = port
+    def __init__(self, port=None, quiet=False):
+        self.port = os.environ.get("REPAINT_PORT", 8765)
         self.server = Server(port=port, quiet=quiet)
 
     @cached_property
