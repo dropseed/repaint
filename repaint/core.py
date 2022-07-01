@@ -19,7 +19,7 @@ class Repaint:
         with open(script_path, "r") as f:
             script_contents = f.read()
 
-        return f"""<script data-port="{self.port}">{script_contents}</script>"""
+        return f"""<script data-reload-port="{self.port}">{script_contents}</script>"""
 
     def reload(self):
         """
