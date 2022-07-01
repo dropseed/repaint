@@ -1,0 +1,4 @@
+- run a websocket server
+- watch a directory for changes
+- send the changes to the websocket server
+- use morphdom to update the DOM

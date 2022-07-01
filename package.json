@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "parcel build browser.js --no-source-maps && rm -r repaint/js && cp -r dist repaint/js"
+  },
+  "dependencies": {
+    "morphdom": "^2.6.1",
+    "parcel": "^2.6.2"
+  }
+}
