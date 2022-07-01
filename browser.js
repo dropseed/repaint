@@ -2,7 +2,7 @@ import morphdom from "morphdom";
 
 const RELOAD_EVENT = "browser-reload";
 const CONNECT_EVENT = "browser-connect";
-const port = document.currentScript.getAttribute("data-repaint-port") || "8765";
+const port = document.currentScript.dataset["repaint-port"] || "8765";
 const ws = new WebSocket("ws://localhost:" + port);
 
 ws.onopen = function() {
