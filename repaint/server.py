@@ -6,7 +6,7 @@ import websockets
 
 
 class Server:
-    def __init__(self, port=8765, quiet=False):
+    def __init__(self, port, quiet=False):
         self.port = port
         self.quiet = quiet
         self.connected_browsers = []
@@ -45,6 +45,7 @@ class Server:
                 print("Unknown message type:", data["type"])
 
     def serve(self):
+        self.print("Serving on port", self.port)
         start_server = websockets.serve(self.ws, "localhost", self.port)
         asyncio.get_event_loop().run_until_complete(start_server)
         asyncio.get_event_loop().run_forever()
