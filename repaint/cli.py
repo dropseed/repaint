@@ -9,7 +9,7 @@ def cli():
 
 
 @cli.command()
-@click.option("--port", default=8765, help="Port to listen on")
+@click.option("--port", default=8765, help="Port to listen on", envvar="REPAINT_PORT")
 def serve(port):
     """
     Start the websocket server
@@ -18,6 +18,6 @@ def serve(port):
 
 
 @cli.command()
-@click.option("--port", default=8765, help="Port to connect to")
+@click.option("--port", default=8765, help="Port to connect to", envvar="REPAINT_PORT")
 def reload(port):
     Repaint(port=port).reload()
