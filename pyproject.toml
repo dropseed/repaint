@@ -9,7 +9,7 @@ license = "MIT"
 repaint = "repaint.cli:cli"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 websockets = "^10.3"
 click = ">=8.0.0"
 
