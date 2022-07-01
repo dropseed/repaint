@@ -32,4 +32,4 @@ class Repaint:
             async with websockets.connect(uri) as websocket:
                 await websocket.send(json.dumps({"type": "reload"}))
 
-        asyncio.get_event_loop().run_until_complete(send_reload())
+        asyncio.run(send_reload())
