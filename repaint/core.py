@@ -9,9 +9,9 @@ from .server import Server
 
 
 class Repaint:
-    def __init__(self, port=8765):
+    def __init__(self, port=8765, quiet=False):
         self.port = port
-        self.server = Server(port=port)
+        self.server = Server(port=port, quiet=quiet)
 
     @cached_property
     def script_tag(self):
