@@ -20,7 +20,8 @@ class Server:
 
             if data["type"] == "browser-connect":
                 self.connected_browsers.append(websocket)
-                print(f"Connected {data['url']}")
+                websocket._repaint_id = data["url"]
+                print(f"Browser connected: {data['url']}")
 
             elif data["type"] == "reload":
                 if not self.connected_browsers:
@@ -31,7 +32,7 @@ class Server:
                 for i, browser_ws in enumerate(self.connected_browsers):
                     try:
                         await browser_ws.send(json.dumps({"type": "browser-reload"}))
-                        print(f"Reloading browser [{i}]")
+                        print(f"Reloading browser {i+1}: {browser_ws._repaint_id}")
                     except websockets.ConnectionClosed:
                         self.connected_browsers.remove(browser_ws)
 
