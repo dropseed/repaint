@@ -11,7 +11,7 @@ from .server import Server
 class Repaint:
     def __init__(self, port=None, quiet=False):
         self.port = os.environ.get("REPAINT_PORT", 8765)
-        self.server = Server(port=port, quiet=quiet)
+        self.server = Server(port=self.port, quiet=quiet)
 
     @cached_property
     def script_tag(self):
