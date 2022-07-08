@@ -1,14 +1,15 @@
 import asyncio
 import json
+import os
 
 import websockets
 
 from .events import BROWSER_CONNECT, BROWSER_RELOAD, BROWSER_RELOAD_ASSETS
 
 
-class Server:
+class RepaintServer:
     def __init__(self, port, quiet=False):
-        self.port = port
+        self.port = port or os.environ.get("REPAINT_PORT", 8765)
         self.quiet = quiet
         self.connected_browsers = []
 

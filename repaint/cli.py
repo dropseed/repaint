@@ -1,6 +1,7 @@
 import click
 
 from .core import Repaint
+from .server import RepaintServer
 
 
 @click.group()
@@ -15,7 +16,7 @@ def serve(port, quiet):
     """
     Start the websocket server
     """
-    Repaint(port=port, quiet=quiet).server.serve()
+    RepaintServer(port=port, quiet=quiet).serve()
 
 
 @cli.command()
