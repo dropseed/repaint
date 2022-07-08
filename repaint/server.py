@@ -7,6 +7,23 @@ import websockets
 from .events import BROWSER_CONNECT, BROWSER_RELOAD, BROWSER_RELOAD_ASSETS
 
 
+class RepaintBrowser:
+    def __init__(self, id, websocket):
+        self.id = id
+        self.websocket = websocket
+
+    def __str__(self):
+        return str(self.id)
+
+    async def send(self, data):
+        json_data = json.dumps(data)
+        try:
+            await self.websocket.send(json_data)
+        except websockets.ConnectionClosedError:
+            # Retry once
+            await self.websocket.send(json_data)
+
+
 class RepaintServer:
     def __init__(self, port, quiet=False):
         self.port = port or os.environ.get("REPAINT_PORT", 8765)
@@ -26,29 +43,29 @@ class RepaintServer:
                 return
 
             if data["type"] == BROWSER_CONNECT:
-                self.connected_browsers.append(websocket)
-                websocket._repaint_id = data["url"]
+                self.connected_browsers.append(
+                    RepaintBrowser(id=data["url"], websocket=websocket)
+                )
                 self.print(f"Browser connected: {data['url']}")
 
             elif data["type"] in (BROWSER_RELOAD, BROWSER_RELOAD_ASSETS):
-                if not self.connected_browsers:
-                    self.print("No browsers connected")
-                    return
-
-                # Send back to all connected_browsers clients
-                json_data = json.dumps(data)
-                for i, browser_ws in enumerate(self.connected_browsers):
-                    try:
-                        await browser_ws.send(json_data)
-                        self.print(f"Reloading browser {i+1}: {browser_ws._repaint_id}")
-                    except websockets.ConnectionClosed:
-                        self.print(
-                            f"Browser {i+1} disconnected: {browser_ws._repaint_id}"
-                        )
-                        self.connected_browsers.remove(browser_ws)
-
+                await self.broadcast_data(data)
             else:
                 print("Unknown message type:", data["type"])
+
+    async def broadcast_data(self, data):
+        if not self.connected_browsers:
+            self.print("No browsers connected")
+            return
+
+        # Send back to all connected_browsers clients
+        for i, browser in enumerate(self.connected_browsers):
+            try:
+                await browser.send(data)
+                self.print(f"Reloading browser {i+1}: {browser}")
+            except websockets.ConnectionClosedOk:
+                self.print(f"Browser {i+1} disconnected: {browser}")
+                self.connected_browsers.remove(browser)
 
     def serve(self):
         self.print("Serving on port", self.port)
