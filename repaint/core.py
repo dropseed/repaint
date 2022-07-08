@@ -1,10 +1,12 @@
 import asyncio
 import json
 import os
+from typing import List
 
 import websockets
 from cached_property import cached_property
 
+from .events import BROWSER_RELOAD, BROWSER_RELOAD_ASSETS
 from .server import Server
 
 
@@ -21,15 +23,21 @@ class Repaint:
 
         return f"""<script data-repaint-port="{self.port}">{script_contents}</script>"""
 
+    def _send_reload(self, event_data: dict):
+        async def send_reload(data: dict):
+            uri = f"ws://localhost:{self.port}"
+            json_data = json.dumps(data)
+            async with websockets.connect(uri) as websocket:
+                await websocket.send(json_data)
+
+        asyncio.run(send_reload(event_data))
+
     def reload(self):
         """
         Send a reload event directly back to the websocket server
         (can be called by any Python code outside the server itself)
         """
+        self._send_reload({"type": BROWSER_RELOAD})
 
-        async def send_reload():
-            uri = f"ws://localhost:{self.port}"
-            async with websockets.connect(uri) as websocket:
-                await websocket.send(json.dumps({"type": "reload"}))
-
-        asyncio.run(send_reload())
+    def reload_assets(self, assets: List[str] = []):
+        self._send_reload({"type": BROWSER_RELOAD_ASSETS, "assets": assets})
