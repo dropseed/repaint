@@ -35,9 +35,10 @@ class Server:
                     return
 
                 # Send back to all connected_browsers clients
+                json_data = json.dumps(data)
                 for i, browser_ws in enumerate(self.connected_browsers):
                     try:
-                        await browser_ws.send(data)
+                        await browser_ws.send(json_data)
                         self.print(f"Reloading browser {i+1}: {browser_ws._repaint_id}")
                     except websockets.ConnectionClosed:
                         self.connected_browsers.remove(browser_ws)
