@@ -42,6 +42,9 @@ class RepaintServer:
                         await browser_ws.send(json_data)
                         self.print(f"Reloading browser {i+1}: {browser_ws._repaint_id}")
                     except websockets.ConnectionClosed:
+                        self.print(
+                            f"Browser {i+1} disconnected: {browser_ws._repaint_id}"
+                        )
                         self.connected_browsers.remove(browser_ws)
 
             else:
