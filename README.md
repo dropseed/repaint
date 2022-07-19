@@ -1,4 +1,3 @@
-- run a websocket server
-- watch a directory for changes
-- send the changes to the websocket server
-- use morphdom to update the DOM
+# repaint
+
+A live reloading tool that uses websockets and [morphdom](https://github.com/patrick-steele-idem/morphdom) to update pages during development without a full refresh.
